@@ -1,0 +1,17 @@
+.wins{
+  background-color: green;
+}
+.losses{
+  background-color: red;
+}
+.draws{
+  
+  background-color: grey;
+  margin-inline:1rem;
+}
+.gameDiv span{
+  padding:0.5rem 1rem;
+  color:white;
+  border-radius: 7px;
+  font-weight: 600;
+}

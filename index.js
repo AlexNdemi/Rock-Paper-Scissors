@@ -1,46 +1,51 @@
 const GAME_DIV = document.querySelector('.gameDiv');
-const BUTTONS_DIV = GAME_DIV.querySelector('.buttons-div')
+const EMOJIS_DIV = GAME_DIV.querySelector('.emojis-div')
 const GAME_RULES = {rock:"scissors",scissors:"paper",paper:"rock"};
 const RECORD_DIV = GAME_DIV.querySelector('.record');
 const COMPUTER_CHOICES = new Array('rock','paper','scissors');
 const RESET_BUTTON = GAME_DIV.querySelector('.reset')
 let   record = {"wins":0,"losses":0,"draws":0};
-BUTTONS_DIV.addEventListener('click',function(event){
-  if(!event.target.closest('button')) return
-  let userPick = event.target.dataset.move;
+let outcome;
+let playerChoices;
+EMOJIS_DIV.addEventListener('click',function(event){
+  const imageContainer = event.target.closest('.image-container');
+  if (!imageContainer) return;
+
+  let userPick = imageContainer.dataset.move;
+  console.log(userPick)
   let computerPick = COMPUTER_CHOICES[Math.floor(Math.random() * COMPUTER_CHOICES.length)];
   console.log(userPick,computerPick);
-  playGame(userPick,computerPick)
+  playGame(userPick,computerPick);
 })
 RESET_BUTTON.addEventListener('click',function(){
   resetGame();
   renderRecordDiv();
 })
 function playGame(userPick,computerPick){
-  let result;
+  playerChoices  = `You picked<img src=images/${userPick}-emoji.png> Computer picked<img src=images/${computerPick}-emoji.png>`
    if(GAME_RULES[userPick] === computerPick){
     record['wins']+=1;
-    result = `You picked ${userPick}.Computer picked ${computerPick}.You win'`
+    outcome = 'You win';
     saveRecord();
-    renderRecordDiv(result);
+    renderRecordDiv(outcome,playerChoices);
     return;
    }
    if(userPick === computerPick){
     record['draws']+=1;
+    outcome = 'The outcome was a Draw';
     saveRecord();
-    result =`You picked ${userPick}.Computer picked ${computerPick}.The outcome was a Draw'`;
-    renderRecordDiv(result);
+    renderRecordDiv(outcome,playerChoices);
     return;
    }else{
     record['losses']+=1;
+    outcome = 'The computer won';
     saveRecord();
-    result = `You picked ${userPick}.Computer picked ${computerPick}.The computer won'`
-    renderRecordDiv(result);
+    renderRecordDiv(outcome,playerChoices);
     return;
    }
    
 }
-function renderRecordDiv(result){
+function renderRecordDiv(outcome,playerChoices){
   RECORD_DIV.innerHTML='';
   let previousRecord = JSON.parse(localStorage.getItem('rps-game-records'));
   if(record && isObject(previousRecord)){
@@ -48,13 +53,25 @@ function renderRecordDiv(result){
   }else{
     record = {"wins":0,"losses":0,"draws":0};
   }
-    const paragraph = document.createElement('p');
-    const paragraph1= document.createElement('p');
-    paragraph1.textContent=result;
+    if( playerChoices && outcome ){
+      const outcomeParagraph = document.createElement('p');
+      outcomeParagraph.setAttribute('class','outcome')
+      const paragraph1= document.createElement('p');
+      outcomeParagraph.textContent=outcome;
+      paragraph1.innerHTML=playerChoices;
+      RECORD_DIV.appendChild(outcomeParagraph);
+      RECORD_DIV.appendChild(paragraph1);
+    }
+    const historyDiv = document.createElement('div');
+    historyDiv.setAttribute('class','history')
+    
+    const recordsTitle = document.createElement('h2');
+    recordsTitle.setAttribute('class','record-title');
+    recordsTitle.textContent = 'Record' 
 
     const winsSpan = document.createElement('span');
     winsSpan.setAttribute('class','wins');
-    winsSpan.textContent = `Wins:${record['wins']}, `
+    winsSpan.textContent = `Wins:${record['wins']}, `;
 
     const drawsSpan = document.createElement('span');
     drawsSpan.setAttribute('class','draws');
@@ -64,12 +81,14 @@ function renderRecordDiv(result){
     lossesSpan.setAttribute('class','losses');
     lossesSpan.textContent = `Losses:${record['losses']},`;
 
-    paragraph.appendChild(winsSpan);
-    paragraph.appendChild(drawsSpan);
-    paragraph.appendChild(lossesSpan);
 
-    RECORD_DIV.appendChild(paragraph1);
-    RECORD_DIV.appendChild(paragraph);
+    historyDiv.appendChild(recordsTitle);
+    historyDiv.appendChild(winsSpan);
+    historyDiv.appendChild(drawsSpan);
+    historyDiv.appendChild(lossesSpan);
+    
+    
+    RECORD_DIV.appendChild(historyDiv);
 }
 
 function isObject(obj) {
@@ -80,7 +99,8 @@ function saveRecord(){
 }
 function resetGame(){
   record = null;
+  outcome = null;
   localStorage.removeItem('ps-game-records');
-  result='';
+  playerChoices ='';
 }
 renderRecordDiv();

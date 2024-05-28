@@ -1,17 +1,63 @@
-.wins{
+body{
+  background-color: rgb(25, 25,25);
+  color:white;
+  font-family:Arial, Helvetica, sans-serif
+}
+.emojis-div{
+  display: grid;
+  grid-template-columns: repeat(auto-fit,100px);
+  grid-gap:1.5em;
+}
+.emojis-div .image-container{
+  border: 3px solid hsl(0, 0%, 90%);
+  border-radius:50%;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  padding:1.5em;
+  height: 60px;
+  aspect-ratio: 1/1;
+  cursor: pointer;
+  
+}
+.gameDiv .record-title{
+  width: 100%;
+  margin-block-end: -.5em;
+}
+.gameDiv .outcome{
+  font-size: 25px;
+  font-weight: bold;
+  margin-top: 50px;
+  margin-bottom: -.5em;
+}
+.gameDiv img{
+  width:50px;
+}
+.gameDiv .wins{
   background-color: green;
 }
-.losses{
+.gameDiv .losses{
   background-color: red;
 }
-.draws{
-  
+.gameDiv .draws{ 
   background-color: grey;
-  margin-inline:1rem;
 }
 .gameDiv span{
   padding:0.5rem 1rem;
   color:white;
   border-radius: 7px;
   font-weight: 600;
+}
+.gameDiv button{
+  background-color: white;
+  border: none;
+  font-size: 15px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+.gameDiv .history{
+  display:flex;
+  flex-wrap: wrap;
+  gap:1em;
+  margin-block-end:2.5rem;
 }
